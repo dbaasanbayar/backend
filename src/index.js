@@ -3,7 +3,9 @@ import axios from "axios";
 import express from "express";
 import bodyParser from "body-parser";
 import { configDotenv } from "dotenv";
-import { connectDB } from "./db.js";
+import { connectDB } from "./database/db.js";
+import { createUser } from "./controllers/user.js";
+import { useRouter } from "./routers/user.router.js";
 
 configDotenv();
 
@@ -17,26 +19,26 @@ app.use(bodyParser.json());
 
 const suragch = [];
 
-app.get("/", async (request, response) => {
-  const res = await axios.get("https://gogo.mn/cache/news-shinemedee?size=15");
-  response.send(res.data);
-});
+// app.get("/", async (request, response) => {
+//   const res = await axios.get("https://gogo.mn/cache/news-shinemedee?size=15");
+//   response.send(res.data);
+// });
 
-app.get("/students", async (request, response) => {
-  const suragch = [];
+// app.get("/students", async (request, response) => {
+//   const suragch = [];
 
-  app.post("/students", async (request, response) => {
-    console.log(request.body);
-    const previousStudent = suragch.filter(
-      (student) => student.seat === request.body.seat
-    );
-    console.log(previousStudent, "filter");
-    if (previousStudent.length === 0) {
-      suragch.push(request.body);
-      response.send(suragch);
-    }
-  });
-});
+//   app.post("/students", async (request, response) => {
+//     console.log(request.body);
+//     const previousStudent = suragch.filter(
+//       (student) => student.seat === request.body.seat
+//     );
+//     console.log(previousStudent, "filter");
+//     if (previousStudent.length === 0) {
+//       suragch.push(request.body);
+//       response.send(suragch);
+//     }
+//   });
+// });
 
 // app.get("/students/details", async (request, response) => {
 //   const studentsDetails = [
@@ -53,6 +55,8 @@ app.get("/students", async (request, response) => {
 //   response.send(studentsDetails);
 // });
 
+// app.get("/students", createUser);
+app.use("/users", useRouter);
 app.listen(3000, () => {
   connectDB();
   console.log(chalk.green(`Server is running ${port}`));
